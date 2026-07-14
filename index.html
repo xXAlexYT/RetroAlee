@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universul lui Alee ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Dancing+Script:wght@700&display=swap');
+
+        :root {
+            --bg-cyan: #e0f7fa;
+            --card-white: #ffffff;
+            --text-main: #00838f;
+            --text-secondary: #006064;
+            --btn-close: #90a4ae;
+            --sticky-note: #fff9c4;
+            --journal-paper: #fdfcf0;
+            --coupon-gold: #fff3e0;
+            --accent-mint: #b2dfdb;
+        }
+
+        /* Fundal animat fluid */
+        body {
+            background: linear-gradient(-45deg, #dd9cf1, #ad72b4, #f1f8e9, #e0f2f1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Animare și fundal auriu la streak-ul de 5 zile */
+        .gold-theme {
+            background: linear-gradient(-45deg, #fffde7, #fff9c4, #ffe082, #fffde7) !important;
+            background-size: 400% 400% !important;
+            animation: gradientBG 15s ease infinite !important;
+            --text-main: #f57f17 !important;
+            --text-secondary: #e65100 !important;
+            --accent-mint: #ffe082 !important;
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Fredoka', sans-serif;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* Widget Streak Îmbunătățit */
+        .streak-widget {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid var(--accent-mint);
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0, 131, 143, 0.15);
+            margin: 15px 0;
+            position: relative;
+        }
+        .streak-fire {
+            font-size: 1.8rem;
+            animation: pulseFire 1.2s infinite alternate;
+            margin-bottom: 3px;
+        }
+        @keyframes pulseFire {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px #ff6d00); }
+            100% { transform: scale(1.25); filter: drop-shadow(0 0 8px #ffab00); }
+        }
+        .streak-bar-container {
+            width: 100px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .streak-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9100, #ff3d00);
+            width: 20%;
+        }
+
+        /* Alertă Personalizată Parolă Greșită (Heiiiiii🧏🏼‍♂️) */
+        .hey-overlay {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(0, 131, 143, 0.95);
+            color: white;
+            padding: 18px 35px;
+            border-radius: 25px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            font-family: 'Fredoka', sans-serif;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0, 131, 143, 0.3);
+            text-align: center;
+            pointer-events: none;
+            border: 2px solid white;
+        }
+        .hey-active { transform: translate(-50%, -50%) scale(1); animation: floatHey 0.4s ease infinite alternate; }
+        @keyframes floatHey {
+            0% { transform: translate(-50%, -52%) scale(1); }
+            100% { transform: translate(-50%, -48%) scale(1.05); }
+        }
+
+        .coupon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .coupon { background: var(--coupon-gold); border: 2px dashed #ffb74d; padding: 15px; border-radius: 18px; cursor: pointer; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .coupon:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(255,183,77,0.2); }
+        .coupon h4 { margin: 0; font-size: 0.85rem; color: var(--text-secondary); }
+        .coupon p { font-size: 0.65rem; margin: 5px 0 0; color: #8d6e63; line-height: 1.3; }
+        
+        .floating-star { position: absolute; color: rgba(0, 131, 143, 0.12); animation: rise 8s infinite linear; z-index: 0; pointer-events: none; }
+        @keyframes rise { 0% { transform: translateY(110vh) scale(1) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-10vh) scale(1.5) rotate(360deg); opacity: 0; } }
+
+        .countdown { display: flex; gap: 8px; margin: 15px 0; justify-content: center; }
+        .time-unit { background: white; padding: 10px; border-radius: 14px; min-width: 55px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); border: 1px solid var(--accent-mint); }
+        .time-unit span { display: block; font-weight: bold; font-size: 1.2rem; color: var(--text-main); }
+        .time-unit label { font-size: 0.55rem; text-transform: uppercase; color: #78909c; font-weight: 600; }
+
+        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; padding: 20px; text-align: center; }
+
+        /* Meniu Grid modern, cu efect de plutire */
+        .horizontal-menu { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+            width: 95%; 
+            max-width: 460px; 
+            padding: 15px; 
+            overflow-y: auto; 
+            max-height: 60vh;
+        }
+        .menu-card { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(5px);
+            border-radius: 22px; 
+            padding: 15px 5px; 
+            box-shadow: 0 8px 20px rgba(0,131,143,0.06); 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 6px;
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+        .menu-card:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(0,131,143,0.12); background: #ffffff; }
+        .menu-card:active { transform: scale(0.95); }
+        .menu-card .icon { font-size: 1.6rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08)); }
+        .menu-card span { font-size: 0.65rem; font-weight: 600; color: #455a64; text-align: center; }
+
+        /* Glassmorphism modern pentru overlays */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 96, 100, 0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .window { background: rgba(255, 255, 255, 0.93); width: 95%; max-width: 500px; border-radius: 32px; padding: 28px; position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 55px rgba(0,64,66,0.15); border: 2px solid rgba(255,255,255,0.8); }
+
+        /* Buton elegant de închidere tip X în colțul de sus al ferestrelor */
+        .close-x {
+            position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.3rem; color: #b0bec5; cursor: pointer; font-weight: bold; padding: 5px; line-height: 1;
+        }
+        .close-x:hover { color: #f44336; transform: scale(1.1); }
+
+        .btn-main { background: linear-gradient(135deg, var(--text-main), #00acc1); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(0,131,143,0.2); }
+        .btn-main:active { transform: scale(0.97); }
+        .btn-no { background: #bbb; color: white; border: none; padding: 12px 30px; border-radius: 25px; cursor: pointer; position: absolute; transition: 0.2s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        .sticky { background: var(--sticky-note); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 12px rgba(0,0,0,0.04); font-size: 0.85rem; text-align: left; margin-bottom: 12px; border-top: 10px solid rgba(0,0,0,0.03); word-break: break-word; color: #37474f; line-height: 1.4; }
+        .mood-btns { font-size: 2.5rem; display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
+        .mood-btn { cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .mood-btn:hover { transform: scale(1.25); }
+        textarea, input[type="text"], input[type="password"] { width: 100%; padding: 14px; border-radius: 16px; border: 1px solid #cfd8dc; font-family: inherit; margin-bottom: 10px; background: rgba(255,255,255,0.7); }
+        textarea:focus, input:focus { outline: none; border-color: var(--text-main); background: #ffffff; }
+
+        /* Monedă stilizată */
+        .coin-wrapper { perspective: 1000px; width: 120px; height: 120px; margin: 20px auto; }
+        .coin-element { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
+        .coin-side { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: white; box-shadow: 0 10px 25px rgba(0,0,0,0.18); border: 4px solid #fff; }
+        .coin-front { background: linear-gradient(135deg, #ffd54f, #ffb300); transform: rotateY(0deg); }
+        .coin-back { background: linear-gradient(135deg, #4dd0e1, #00acc1); transform: rotateY(180deg); }
+        @keyframes spinCoinAnimation { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(1800deg); } }
+
+        /* Buton Plutitor Busy Modificat (Stil ON/OFF) */
+        .busy-floating-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #4caf50; /* Verde implicit = Liberă */
+            color: white;
+            border: 2px solid white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+            cursor: pointer;
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .busy-floating-btn.is-busy {
+            background: #e53935; /* Roșu = Ocupată */
+            box-shadow: 0 6px 16px rgba(229, 57, 53, 0.4);
+        }
+        .busy-floating-btn:active { transform: scale(0.9); }
+
+        /* Slider supărare */
+        .anger-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #ffe082, #ff7043, #d84315);
+            outline: none;
+            margin: 15px 0;
+        }
+        .anger-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #b71c1c;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stars-container"></div>
+    
+    <div id="hey-alert" class="hey-overlay">Heiiiiii🧏🏼‍♂️</div>
+
+    <div id="page-lock" class="screen" style="display: flex;">
+        <h1 style="font-family: 'Dancing Script'; font-size: 3.5rem; margin: 0; color: var(--text-secondary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">Pentru Alee ✨</h1>
+        
+        <div class="streak-widget">
+            <div class="streak-fire">🔥</div>
+            <div style="font-size: 0.8rem; font-weight: bold; color: var(--text-secondary);">Zile Consecutive: <span id="streak-count-val">1</span></div>
+            <div class="streak-bar-container"><div id="streak-bar-progress" class="streak-bar-fill"></div></div>
+        </div>
+
+        <div class="countdown">
+            <div class="time-unit"><span id="days">00</span><label>Zile</label></div>
+            <div class="time-unit"><span id="hours">00</span><label>Ore</label></div>
+            <div class="time-unit"><span id="mins">00</span><label>Min</label></div>
+            <div class="time-unit"><span id="secs">00</span><label>Sec</label></div>
+        </div>
+        <input type="password" id="passInput" style="text-align: center; max-width: 260px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);" placeholder="Codul secret">
+        
+        <div id="password-errors-count" style="font-size: 0.9rem; color: #d32f2f; font-weight: bold; margin-top: 5px;">Greșeli: 0</div>
+        
+        <div style="font-size: 0.8rem; margin: 12px 0; color: var(--text-secondary); font-style: italic; max-width: 280px;">Indiciu: Siguur??😉</div>
+        <button class="btn-main" onclick="check()">Deschide</button>
+    </div>
+
+    <div id="page-ask" class="screen">
+        <h2 style="font-size: 2.2rem; color: var(--text-secondary); max-width: 400px; line-height: 1.3;">Vrei să explorezi Universul lui Alee alături de mine? 🚀</h2>
+        <div style="position: relative; width: 100%; height: 300px; margin-top: 20px;">
+            <button id="yes-btn" class="btn-main" onclick="yesAnswer()">Normal! 😎</button>
+            <button id="no-btn" class="btn-no">Nu cred 😜</button>
+        </div>
+    </div>
+
+    <div id="page-dashboard" class="screen">
+        <button class="busy-floating-btn" id="busy-btn" onclick="toggleBusyState()" title="Schimbă Starea">👋</button>
+
+        <div class="streak-widget" style="padding: 8px 20px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="streak-fire" style="font-size: 1.4rem;">🔥</div>
+                <div id="streak-banner-dash" style="font-size: 0.85rem; font-weight: bold; color: var(--text-secondary);"></div>
+            </div>
+        </div>
+        
+        <h2 style="font-size: 1.7rem; margin-bottom: 25px; color: var(--text-secondary); font-family: 'Fredoka'; font-weight: 600;"> </h2>
+        
+        <div class="horizontal-menu">
+            <div class="menu-card" onclick="openO('o-scrisoare')"><span class="icon">✉️</span><span>Scrisoare</span></div>
+            <div class="menu-card" onclick="openO('o-rules')"><span class="icon">📜</span><span>Ghid</span></div>
+            <div class="menu-card" onclick="openO('o-poze')"><span class="icon">📸</span><span>Amintiri</span></div>
+            <div class="menu-card" onclick="openO('o-journal')"><span class="icon">📖</span><span>Jurnal</span></div>
+            <div class="menu-card" onclick="openO('o-mood')"><span class="icon">✨</span><span>Mood</span></div>
+            <div class="menu-card" onclick="openO('o-bilete')"><span class="icon">🎟️</span><span>Bilete</span></div>
+            <div class="menu-card" onclick="openO('o-bucket')"><span class="icon">✈️</span><span>Lista de dorințe</span></div>
+            <div class="menu-card" onclick="openO('o-jar')"><span class="icon">🏺</span><span>Borcanul cu Mesaje</span></div>
+            <div class="menu-card" onclick="openO('o-motivation')"><span class="icon">💡</span><span>Motivation</span></div>
+            <div class="menu-card" onclick="openO('o-dreams')"><span class="icon">☁️</span><span>Dream Catcher</span></div>
+            <div class="menu-card" onclick="openO('o-music')"><span class="icon">🎵</span><span>Playlist-ul Nostru</span></div>
+            <div class="menu-card" onclick="openO('o-wheel')"><span class="icon">🎡</span><span>Roata Destinului</span></div>
+            <div class="menu-card" onclick="openO('o-coin')"><span class="icon">🪙</span><span>Aruncă Banul</span></div>
+            <div class="menu-card" onclick="openO('o-greenhouse')"><span class="icon">🌸</span><span>Grădina noastră</span></div>
+            <div class="menu-card" onclick="openO('o-harta')"><span class="icon">📍</span><span>Harta</span></div>
+            <div class="menu-card" onclick="openO('o-pdf-viewer')"><span class="icon">📄</span><span>Contractul</span></div>
+        </div>
+    </div>
+
+    <div id="o-coin" class="overlay"><div class="window">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2>🪙 Decizii Rapide</h2>
+        <p style="font-size: 0.85rem; color: #546e7a;">Nu știți cine are dreptate sau ce să faceți? Lasă moneda să decidă!</p>
+        
+        <div class="coin-wrapper">
+            <div class="coin-element" id="coin-obj">
+                <div class="coin-side coin-front">Alex</div>
+                <div class="coin-side coin-back">Alee</div>
+            </div>
+        </div>
+
+        <div id="coin-result" class="sticky" style="display:none; text-align:center; font-weight:bold; background:#e0f2f1;"></div>
+        
+        <button class="btn-main" style="width:100%" id="flip-btn" onclick="flipCoin()">Dă cu banul! 🪙</button>
+        <button class="btn-main" style="background:#bbb; width:100%; margin-top:8px;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-poze" class="overlay"><div class="window">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2>📸 Amintirile Noastre</h2>
+        <video controls style="width:100%; border-radius:16px; margin-bottom:12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);"><source src="revelioncheers.mov"></video>
+        <video controls style="width:100%; border-radius:16px; margin-bottom:12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);"><source src="dans.mov"></video>
+        <img src="gps.jpg" style="width:100%; margin-top:10px; border-radius:16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" alt="img">
+        <img src="urmatoarea carte.jpg" style="width:100%; margin-top:10px; border-radius:16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" alt="img">
+        <img src="eve.jpg" style="width:100%; margin-top:10px; border-radius:16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" alt="img">
+        <img src="plecare.jpg" style="width:100%; margin-top:10px; border-radius:16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" alt="img">
+        <img src="buncacool.png" style="width:100%; margin-top:10px; border-radius:16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" alt="img">
+        <img src="ai.jpg" style="width:100%; margin-top:10px; border-radius:16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" alt="img">
+        <button class="btn-main" style="margin-top:20px; width:100%" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-mood" class="overlay"><div class="window">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2>✨ Cum te simți azi?</h2>
+        <div class="mood-btns">
+            <span class="mood-btn" onclick="moodMsg('😊','Mă bucur mult să aud că ești bine!')">😊</span>
+            <span class="mood-btn" onclick="moodMsg('😁','Super! Energia ta bună e contagioasă!')">😁</span>
+            <span class="mood-btn" onclick="moodMsg('😴','Te înțeleg, ai nevoie de puțină odihnă. Mergi și încarcă-ți bateriile!')">😴</span>
+            <span class="mood-btn" onclick="moodMsg('😔','Hey, dacă s-a întâmplat ceva, știi că poți să-mi spui oricând.')">😔</span>
+        </div>
+        
+        <hr style="border:0; border-top: 1px solid #e0e0e0; margin: 20px 0;">
+        <h3 style="font-size:1.1rem; margin-bottom:5px; color: var(--text-secondary);">Cât de supărată ești acum?</h3>
+        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #78909c; padding: 0 5px; font-weight: 600;">
+            <span>0% (Deloc)</span>
+            <span>50% (Așa și așa)</span>
+            <span>100% (Maxim)</span>
+        </div>
+        <input type="range" min="0" max="100" value="0" class="anger-slider" id="angerRange" oninput="updateAngerLabel(this.value)">
+        <div style="font-size: 1.2rem; font-weight: bold; color: #b71c1c; margin-bottom: 12px;">Nivel actual: <span id="angerVal">0%</span></div>
+        <button class="btn-main" style="width:100%; background: linear-gradient(135deg, #e64a19, #b71c1c); box-shadow: 0 4px 12px rgba(183,28,28,0.2); margin-bottom: 10px;" onclick="sendAngerLevel()">Trimite nivelul de supărare 💔</button>
+        
+        <div id="mood-text" class="sticky" style="display:none; text-align:center;"></div>
+        <button class="btn-main" style="width:100%; background: #bbb;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-journal" class="overlay"><div class="window">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2>📖 Jurnal Secret</h2>
+        <textarea id="j-in" rows="3" placeholder="Scrie un gând, o idee sau ceva ce ți s-a întâmplat azi..."></textarea>
+        <button class="btn-main" style="width:100%" onclick="addJ()">Salvează în Jurnal</button>
+        <div id="j-list" style="margin-top:15px; max-height: 200px; overflow-y: auto;"></div>
+        <button class="btn-main" style="background:#bbb; width:100%; margin-top:8px;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-motivation" class="overlay"><div class="window">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2>💡 Motivația (24h)</h2>
+        <input type="text" id="m-in" placeholder="Un gând bun pentru Alex...">
+        <button class="btn-main" style="width:100%" onclick="addM()">Adaugă Mesaj</button>
+        <div id="m-list" style="margin-top:15px; max-height: 200px; overflow-y: auto;"></div>
+        <button class="btn-main" style="background:#bbb; width:100%; margin-top:8px;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-bilete" class="overlay"><div class="window">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2>🎟️ Bilete Magice de Amiciție</h2>
+        <p style="font-size: 0.75rem; color: #546e7a;">Alege un bilet și voi primi o notificare să-l onorez cât mai repede!</p>
+        <div class="coupon-grid">
+            <div class="coupon" onclick="useCoupon('Apel')">
+                <h4>📞 Apel la povești</h4>
+                <p>Ne auzim la telephone să punem țara la cale!</p>
+            </div>
+            <div class="coupon" onclick="useCoupon('Provocare')">
+                <h4>🕊️ Provocare amuzantă</h4>
+                <p>Primesc o provocare fun, fără drept de refuz.</p>
+            </div>
+            <div class="coupon" onclick="useCoupon('Iesire')">
+                <h4>🚶 Ieșire afară</h4>
+                <p>Lăsăm ecranele și ieșim la o plimbare în oraș!</p>
+            </div>
+            <div class="coupon" onclick="useCoupon('CasaIubirii')">
+                <h4>🍿 Casa Iubirii</h4>
+                <p>Ne uităm împreună la emisiune!</p>
+            </div>
+        </div>
+        <button class="btn-main" style="width:100%; margin-top:20px;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-harta" class="overlay"><div class="window">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2>📍 Locul Unde Ne-am Cunoscut Inopinant😂😂</h2>
+        <p style="font-size:0.85rem; margin-bottom:15px; color:#546e7a;">Locul de unde a pornit toutul.</p>
+        <a href="https://www.google.com/maps/place/44%C2%B043'41.3%22N+24%C2%B045'10.3%22E/@44.7281526,24.7517784,18z/data=!3m1!4b1!4m13!1m8!3m7!1s0x40b2a0d79633d7c7:0xb5964ba558b4e884!2zMTE3NjQxIELEg27Eg3JlxZ90aQ!3b1!8m2!3d44.7282481!4d24.7530166!16s%2Fg%2F122hjjyk!3m3!8m2!3d44.728151!4d24.752861!5m1!1e1?entry=ttu&g_ep=EgoyMDI2MDYyMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-main" style="display: block; text-align: center; text-decoration: none; width: 100%;">
+    Deschide Harta 📍
+</a>
+        <button class="btn-main" style="background:#bbb; width:100%; margin-top:10px;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-scrisoare" class="overlay">
+        <div class="window" style="background: #fdfcf0; border: 1px solid #d4c59f; box-shadow: inset 0 0 50px rgba(0,0,0,0.04);">
+            <button class="close-x" onclick="closeO()">×</button>
+            <h2 style="font-family: 'Dancing Script', cursive; font-size: 2.2rem;">✉️ Un gând special</h2>
+            
+            <div id="envelope-container" style="position: relative; min-height: 350px; cursor: pointer;" onclick="openLetter()">
+                <div id="wax-seal" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5; text-align: center;">
+                    <div style="width: 75px; height: 75px; background: #00838f; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,131,143,0.3); border: 3px solid #006064;">
+                        <span style="color: gold; font-size: 2rem;">✨</span>
+                    </div>
+                    <p style="font-size: 0.75rem; color: #006064; font-weight: bold; margin-top: 12px; text-transform: uppercase; letter-spacing: 1px;">Apasă sigiliul</p>
+                </div>
+                
+                <div id="envelope-body" style="width: 100%; height: 100%; background: #fdfcf0; border-radius: 10px; display: flex; align-items: flex-start; justify-content: center;">
+                     <div id="letter-text" style="padding: 15px; font-family: 'Dancing Script', cursive; font-size: 1.35rem; opacity: 0; display: none; text-align: left; color: #3e2723; line-height: 1.6;">
+                        Bună, Alee!<br><br>
+                        M-am gândit să creez ceva inedit, un spațiu digital care să fie doar al nostru și care să rămână ca o amintire frumoasă, indiferent unde ne aflăm.<br><br>
+                        Am construit acest site ca un loc în care să găsești mereu un gând pozitiv, o melodie bună, un bilet de activități sau un colț unde să-ți lași ideile atunci când simți nevoia.<br><br>
+                        Sper ca acest mic proiect să-ți aducă un zâmbet pe buze și să-ți amintească faptul că ai pe cineva pe care te poți baza oricând.<br><br>
+                        Cu drag, <br> 
+                        <b>Alex!🤍</b>
+                     </div>
+                </div>
+            </div>
+
+            <button class="btn-main" style="margin-top:20px; width:100%" onclick="closeO()">Închide</button>
+        </div>
+    </div>
+
+    <div id="o-bucket" class="overlay">
+        <div class="window">
+            <button class="close-x" onclick="closeO()">×</button>
+            <h2>✈️ Our Bucket List</h2>
+            <p style="font-size: 0.8rem; color: #546e7a;">Aventuri și planuri de bifat împreună!</p>
+            
+            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                <input type="text" id="b-in" placeholder="Adaugă o activitate nouă..." style="margin-bottom: 0;">
+                <button class="btn-main" onclick="addB()" style="padding: 10px 20px;">+</button>
+            </div>
+
+            <div id="b-list" style="text-align: left; max-height: 250px; overflow-y: auto; margin-bottom: 15px;"></div>
+
+            <button class="btn-main" style="width:100%" onclick="closeO()">Închide</button>
+        </div>
+    </div>
+
+    <div id="o-jar" class="overlay">
+        <div class="window" style="background: #f4fbfb;">
+            <button class="close-x" onclick="closeO()">×</button>
+            <h2>🏺 Borcanul cu Mesajee</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Apasă pe borcan pentru a extrage un bilețel de prietenie!</p>
+            
+            <div id="jar-container" onclick="pullMessage()" style="font-size: 5.5rem; cursor: pointer; margin: 20px 0; display: inline-block; user-select: none; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));">
+                🏺
+            </div>
+            
+            <div id="jar-message" class="sticky" style="display:none; text-align:center; background: white; border: 2px solid var(--accent-mint); font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: #37474f;"></div>
+
+            <button class="btn-main" style="width:100%; margin-top: 15px;" onclick="closeO()">Închide</button>
+        </div>
+    </div>
+
+    <div id="o-rules" class="overlay">
+        <div class="window" style="text-align: left; max-width: 95%; border: 2px solid var(--text-main);">
+            <button class="close-x" onclick="closeO()">×</button>
+            <h2 style="text-align: center; font-family: 'Dancing Script', cursive; color: var(--text-main); font-size: 2.2rem; margin-bottom: 10px;">📜 Ghidul Tău</h2>
+            
+            <div style="max-height: 400px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5; color: #444; padding-right: 10px;">
+                <p style="text-align: center; font-style: italic; color: #78909c; margin-bottom: 15px;">Fiecare secțiune are utilitatea ei distractivă. Iată ce poți face aici:</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <p><b>1. ✉️ Scrisoare:</b> Un mesaj special de apreciere, sigilat cu grijă. Apasă sigiliul ca să-l citești.</p>
+                    <p><b>2. 📜 Ghid:</b> Harta completă a butoanelor, exact unde te afli acum.</p>
+                    <p><b>3. 📸 Amintiri:</b> Colțul nostru plin de momente amuzante surprinse în poze și video-uri.</p>
+                    <p><b>4. 📖 Jurnal:</b> Spațiul tău complet personal pentru a-ți așeza gândurile de peste zi.</p>
+                    <p><b>5. ✨ Mood:</b> Alege-ți starea actuală sau reglează nivelul de supărare de la 0 la 100%, iar eu voi primi un mic semn!</p>
+                    <p><b>6. 🎟️ Bilete:</b> Cupoane de activități pe care le poți folosi, iar eu mă oblig să le organizez.</p>
+                    <p><b>7. ✈️ Liste de dorințe:</b> Bucket List-ul amintirilor noastre. Adaugă idei noi pe care să le bifăm.</p>
+                    <p><b>8. 🏺 Borcanul cu mesaje:</b> Când vrei un mic refresh sau un gând bun, trage un răvaș din borcan.</p>
+                    <p><b>9. 💡 Motivation:</b> Locul perfect pentru a trimite o doză de energie și optimism către mine.</p>
+                    <p><b>10. ☁️ Dream Catcher:</b> Ai visat ceva ciudat sau memorabil? Trimite-mi povestea visului tău.</p>
+                    <p><b>11. 🎵 Playlist-ul nostru:</b> Link direct către melodiile noastre preferate, pe YouTube.</p>
+                    <p><b>12. 🎡 Roata Destinului:</b> Nu știți ce activitate online să facem? Învârte roata și lasă ideile să curgă!</p>
+                    <p><b>13. 🪙 Aruncă Banul:</b> Secțiunea specială pentru decizii rapide prin datul cu banul virtual.</p>
+                    <p><b>14. 🌱 Grădina noastră:</b> O floare virtuală specială care crește progresiv în funcție de Streak-ul tău zilnic!</p>
+                    <p><b>15. 📍 Harta:</b> Locul simbolic unde am interacționat prima dată.</p>
+                    <p><b>💡 Butonul Plutitor (👋 / 🤫):</b> Comutatorul tău de stare ON/OFF! Când ești ocupată, apasă-l ca să devină roșu (Ocupată), iar când ai timp liber lasă-l verde (Liberă). Alex va afla instant!</p>
+                </div>
+
+                <hr style="border: 0; border-top: 1px dashed var(--text-main); margin: 15px 0;">
+                <p style="text-align: center; font-weight: bold; color: var(--text-secondary); font-family: 'Fredoka';">Pregătită să explorezi? 🌟</p>
+            </div>
+            
+            <button class="btn-main" style="width:100%; margin-top: 15px;" onclick="closeO()">Am înțeles, Alex!</button>
+        </div>
+    </div>
+
+    <div id="o-pdf-viewer" class="overlay">
+        <div class="window" style="width: 95%; height: 85vh; padding: 10px; display: flex; flex-direction: column;">
+            <button class="close-x" onclick="closeO()">×</button>
+            <h2 style="margin-bottom: 10px;">📄 Contractul de Prietenie</h2>
+            
+            <div style="flex-grow: 1; width: 100%; overflow: hidden; border-radius: 16px; border: 1px solid #ddd; background: #eee;">
+                <iframe src="contract4.pdf" style="width: 100%; height: 100%;" frameborder="0">
+                    <p>Browserul tău nu poate afișa PDF-ul. 
+                       <a href="contract4.pdf" target="_blank">Apasă aici pentru a-l descărca direct.</a>
+                    </p>
+                </iframe>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <a href="contract4.pdf" download class="btn-main" style="flex: 1; text-decoration: none; background: #4db6ac; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(77,182,172,0.2);">
+                    📥 Descarcă PDF
+                </a>
+                <button class="btn-main" style="flex: 1; background: #9e9e9e;" onclick="closeO()">Închide</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="o-music" class="overlay">
+        <div class="window" style="background: #f4fbfb; border: 2px solid var(--text-main); text-align: center;">
+            <button class="close-x" onclick="closeO()">×</button>
+            <h2 style="font-family: 'Dancing Script', cursive; color: var(--text-main); font-size: 2.2rem;">🎵 Playlist-ul Nostru</h2>
+            
+            <div style="padding: 15px;">
+                <div style="font-size: 4.5rem; margin-bottom: 10px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));">🎧</div>
+                <p style="color: #444; font-size: 1rem; line-height: 1.5;">
+                    Am adunat la un loc piesele care ne dau o stare bună. 
+                    Apasă pe butonul de mai jos ca să pornești muzica!
+                </p>
+            </div>
+
+            <a href="https://www.youtube.com/playlist?list=PLEnUWDG1Ky16KVNPRi7h_EoQpq-hRZCZP&jct=8yIJAKaTg11rhf-lsOD2uw" 
+               target="_blank" 
+               class="btn-main" 
+               style="display: block; text-decoration: none; background: linear-gradient(135deg, #ff0000, #b71c1c); color: white; font-weight: bold; margin-bottom: 10px; padding: 15px; box-shadow: 0 4px 15px rgba(229,57,53,0.3);">
+                ▶ DESCHIDE PLAYLIST-UL
+            </a>
+
+            <button class="btn-main" style="width:100%; background: #9e9e9e;" onclick="closeO()">Închide</button>
+        </div>
+    </div>
+
+    <div id="o-dreams" class="overlay">
+        <div class="window" style="background: linear-gradient(to bottom, #e0f7fa, #ffffff); border: 2px solid #4dd0e1;">
+            <button class="close-x" onclick="closeO()">×</button>
+            <h2 style="font-family: 'Dancing Script', cursive; color: #00838f; font-size: 2.2rem;">☁️ Dream Catcher</h2>
+            <p style="font-size: 0.85rem; color: #006064; margin-bottom: 15px;">Ai visat ceva complet ciudat sau interesant? Scrie-l aici și îl punem la păstrare...</p>
+            
+            <textarea id="dream-text" placeholder="Se făcea că..." style="width: 100%; height: 120px; border-radius: 16px; padding: 12px; font-family: inherit; resize: none;"></textarea>
+            
+            <button class="btn-main" onclick="sendDream()" style="width: 100%; margin-top: 10px; background: #00acc1;">Trimite Visul</button>
+            <button class="btn-main" style="width: 100%; margin-top: 10px; background: #9e9e9e;" onclick="closeO()">Închide</button>
+            
+            <p id="dream-confirm" style="display:none; color: #00838f; font-size: 0.8rem; margin-top: 10px; font-weight: bold;">✨ Visul a fost trimis către Alex!</p>
+        </div>
+    </div>
+
+    <div id="o-greenhouse" class="overlay"><div class="window" style="background: linear-gradient(to bottom, #f1f8e9, #ffffff); border: 2px solid #81c784;">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2 style="font-family: 'Dancing Script', cursive; color: #2e7d32; font-size: 2.2rem;">Grădina Alexandreeei 🌸</h2>
+        <p style="font-size: 0.85rem; color: #558b2f; line-height: 1.4;">Această floare specială evoluează și înflorește automat din 5 în 5 zile, în funcție de numărul de zile consecutive pe care le aduni!</p>
+        
+        <div id="flower-stage" style="font-size: 6.5rem; margin: 25px 0; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.05));">🌰</div>
+        
+        <div id="growth-info" style="font-size: 0.95rem; font-weight: bold; color: #2e7d32; background: rgba(255,255,255,0.6); padding: 8px; border-radius: 12px; display: inline-block;">
+            Prag Actual: <span id="growth-stage-text">Sămânță (Zile 0-4)</span>
+        </div>
+        
+        <button class="btn-main" style="width: 100%; margin-top: 25px; background: #66bb6a;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <div id="o-wheel" class="overlay"><div class="window" style="background: #fffafa; border: 2px solid var(--text-main);">
+        <button class="close-x" onclick="closeO()">×</button>
+        <h2 style="font-family: 'Dancing Script', cursive; font-size: 2.2rem;">🎡 Ce facem azi?</h2>
+        <p style="font-size: 0.85rem; color: #546e7a;">Învârte roata și vezi ce activitate ne rezervă timpul liber!</p>
+        
+        <div id="wheel-container" style="margin: 20px auto; width: 200px; height: 200px; border-radius: 50%; border: 6px solid var(--text-main); position: relative; display: flex; align-items: center; justify-content: center; font-weight: bold; overflow: hidden; background: white; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+            <div id="wheel-text" style="font-size: 1.1rem; text-align: center; padding: 10px; color: #37474f;">?</div>
+        </div>
+        
+        <div style="font-size: 1.6rem; margin-top: -12px; margin-bottom: 12px; color: var(--text-main);">▲</div>
+
+        <button class="btn-main" id="spin-btn" style="width: 100%;" onclick="spinWheel()">ÎNVÂRTE! ✨</button>
+        <button class="btn-main" style="width: 100%; margin-top: 10px; background: #bbb;" onclick="closeO()">Închide</button>
+    </div></div>
+
+    <script>
+        // ANIMATIE „HEIIIIII” LA PAROLĂ GREȘITĂ
+        function triggerHeyAnimation() {
+            const heyBox = document.getElementById('hey-alert');
+            heyBox.classList.add('hey-active');
+            setTimeout(() => { heyBox.classList.remove('hey-active'); }, 2500);
+        }
+
+        // DAILY STREAK TRACKER
+        let globalStreak = 1;
+        function handleStreak() {
+            const todayStr = new Date().toDateString();
+            let lastVisit = localStorage.getItem('u_last_visit_a');
+            let currentStreak = parseInt(localStorage.getItem('u_streak_a') || '0');
+
+            if (!lastVisit) {
+                currentStreak = 1;
+            } else {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toDateString();
+
+                if (lastVisit === yesterdayStr) {
+                    currentStreak += 1;
+                } else if (lastVisit !== todayStr) {
+                    currentStreak = 1;
+                }
+            }
+
+            localStorage.setItem('u_last_visit_a', todayStr);
+            localStorage.setItem('u_streak_a', currentStreak);
+            globalStreak = currentStreak;
+            
+            let barPercentage = Math.min(100, (currentStreak / 5) * 100);
+            document.getElementById('streak-count-val').innerText = currentStreak;
+            document.getElementById('streak-bar-progress').style.width = barPercentage + '%';
+            
+            const dashBanner = document.getElementById('streak-banner-dash');
+            if (currentStreak >= 5) {
+                document.body.classList.add('gold-theme');
+                dashBanner.innerHTML = `Streak de ${currentStreak} Zile! Ai deblocat Tema Aurie Secretă! ✨`;
+            } else {
+                dashBanner.innerHTML = `Streak activ: ${currentStreak} zile consecutive`;
+            }
+        }
+        handleStreak();
+
+        // CRONOMETRU
+        function updateTimer() {
+            const diff = new Date("February 14, 2026 00:00:00") - new Date();
+            if (diff <= 0) { document.querySelector(".countdown").innerHTML = "Universul este deschis! ✨"; return; }
+            document.getElementById('days').innerText = String(Math.floor(diff/86400000)).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((diff/3600000)%24)).padStart(2, '0');
+            document.getElementById('mins').innerText = String(Math.floor((diff/60000)%60)).padStart(2, '0');
+            document.getElementById('secs').innerText = String(Math.floor((diff/1000)%60)).padStart(2, '0');
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+
+        // PAROLA CU COUNTER ȘI HEIIIIII
+        let errorCounter = 0;
+        function check() {
+            let input = document.getElementById('passInput').value;
+            if(input.toUpperCase() === "101%") { 
+                document.getElementById('page-lock').style.display='none';
+                document.getElementById('page-ask').style.display='flex';
+            } else { 
+                errorCounter++;
+                document.getElementById('password-errors-count').innerText = "Greșeli: " + errorCounter;
+                triggerHeyAnimation(); // Pornește animația drăguță cu „Heiiiiii”
+            }
+        }
+
+        // INTERACȚIUNE DA/NU
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        let yesSize = 1;
+        noBtn.addEventListener('mouseover', () => {
+            noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            yesSize += 0.15;
+            yesBtn.style.transform = `scale(${yesSize})`;
+        });
+
+        function yesAnswer() {
+            document.getElementById('page-ask').style.display='none';
+            document.getElementById('page-dashboard').style.display='flex';
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", { 
+                method: "POST", 
+                headers: {"Content-Type":"application/json"}, 
+                body: JSON.stringify({ Eveniment: "ALEE A SPUS DA! ✨", Mesaj: "A deblocat spațiul." })
+            });
+        }
+
+        // LOGICA BUTON BUSY (SISTEM INTEGRAT ON/OFF)
+        let isBusyActive = false;
+        function toggleBusyState() {
+            const busyBtn = document.getElementById('busy-btn');
+            isBusyActive = !isBusyActive;
+            
+            let statusText = "";
+            if (isBusyActive) {
+                busyBtn.classList.add('is-busy');
+                busyBtn.innerText = "🤫";
+                statusText = "OCUPATĂ (are treabă)";
+                alert("Stare salvată: Ești Ocupată acum (🤫). Alex a fost notificat!");
+            } else {
+                busyBtn.classList.remove('is-busy');
+                busyBtn.innerText = "👋";
+                statusText = "LIBERĂ (este disponibilă)";
+                alert("Stare salvată: Ești Liberă acum (👋). Alex a fost notificat!");
+            }
+
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    _subject: "🤫 STARE NOUĂ: Alee și-a schimbat disponibilitatea",
+                    Status_Actual: statusText,
+                    Mesaj: `Alee a comutat butonul. În acest moment este ${statusText}.`,
+                    Ora: new Date().toLocaleString()
+                })
+            });
+        }
+
+        // SLIDER SUPĂRARE
+        function updateAngerLabel(val) { document.getElementById('angerVal').innerText = val + "%"; }
+        function sendAngerLevel() {
+            let val = document.getElementById('angerRange').value;
+            alert("Nivelul tău de supărare (" + val + "%) a fost trimis. Alex vine la raport! 💔");
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    _subject: "💔 ALERTA SUPĂRARE: Nivel nou de la Alee!",
+                    Procent_Suparare: val + "%",
+                    Data_Ora: new Date().toLocaleString()
+                })
+            });
+        }
+
+        function useCoupon(coupon) {
+            alert("Bilet activat: " + coupon + "! Alex a primit mesajul.");
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", { 
+                method: "POST", 
+                headers: {"Content-Type":"application/json"}, 
+                body: JSON.stringify({ Bilet_Ales: coupon, Status: "Alee dorește să folosească acest bilet!" })
+            });
+        }
+
+        // ARUNCĂ CU BANUL
+        let isFlipping = false;
+        function flipCoin() {
+            if (isFlipping) return;
+            isFlipping = true;
+            const coin = document.getElementById('coin-obj');
+            const resultBox = document.getElementById('coin-result');
+            const btn = document.getElementById('flip-btn');
+            
+            resultBox.style.display = 'none';
+            btn.disabled = true;
+            coin.style.animation = "spinCoinAnimation 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards";
+            
+            setTimeout(() => {
+                const choices = ["Are dreptate Alex", "Are dreptate Alee ✨"];
+                const finalResult = choices[Math.floor(Math.random() * choices.length)];
+                
+                coin.style.animation = "none";
+                if (finalResult.includes("Alee")) {
+                    coin.style.transform = "rotateY(180deg)";
+                    triggerHeyAnimation(); // O atenționare jucăușă și aici dacă dorești
+                } else {
+                    coin.style.transform = "rotateY(0deg)";
+                }
+                
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = `🎯 Decizia Destinului:<br><b>${finalResult}</b>`;
+                
+                fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ _subject: "🪙 Rezultat Monedă Virtuală", Rezultat: finalResult })
+                });
+
+                btn.disabled = false; isFlipping = false;
+            }, 2000);
+        }
+
+        // JURNAL
+        function addJ() {
+            let val = document.getElementById('j-in').value;
+            if(!val) return;
+            let data = JSON.parse(localStorage.getItem('u_j_a') || '[]');
+            data.push({t: val, d: new Date().toLocaleString()});
+            localStorage.setItem('u_j_a', JSON.stringify(data));
+            
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ _subject: "¼ Notă Jurnal Alee", Continut: val })
+            });
+            document.getElementById('j-in').value = ''; renderJ();
+        }
+        function renderJ() {
+            const entries = JSON.parse(localStorage.getItem('u_j_a') || '[]');
+            document.getElementById('j-list').innerHTML = entries.map(e => `<div class="sticky"><small>${e.d}</small><br>${e.t}</div>`).reverse().join('');
+        }
+
+        // MOTIVATION
+        function addM() {
+            let val = document.getElementById('m-in').value;
+            if(!val) return;
+            let data = JSON.parse(localStorage.getItem('u_m_a') || '[]');
+            data.push({t: val, time: Date.now()});
+            localStorage.setItem('u_m_a', JSON.stringify(data));
+            
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ _subject: "💡 Motivație de la Alee", Mesaj: val })
+            });
+            document.getElementById('m-in').value = ''; renderM();
+        }
+        function renderM() {
+            let data = JSON.parse(localStorage.getItem('u_m_a') || '[]').filter(m => Date.now() - m.time < 86400000);
+            localStorage.setItem('u_m_a', JSON.stringify(data));
+            document.getElementById('m-list').innerHTML = data.map(m => `<div class="sticky" style="border-left:5px solid #4db6ac">${m.t}</div>`).reverse().join('');
+        }
+
+        // MOOD CLASIC
+        function moodMsg(e, m) { 
+            const d = document.getElementById('mood-text'); 
+            d.style.display = 'block'; d.innerHTML = `<b>${e}</b> ${m}`; 
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ _subject: "Stare de spirit Alee", Mood: e })
+            });
+        }
+
+        // SCRISOARE
+        function openLetter() {
+            document.getElementById('wax-seal').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('wax-seal').style.display = 'none';
+                const text = document.getElementById('letter-text');
+                text.style.display = 'block';
+                setTimeout(() => { text.style.opacity = '1'; }, 50);
+            }, 600);
+        }
+
+        // BUCKET LIST
+        function addB() {
+            let val = document.getElementById('b-in').value;
+            if(!val) return;
+            let data = JSON.parse(localStorage.getItem('u_b_a') || '[]');
+            data.push({t: val, done: false});
+            localStorage.setItem('u_b_a', JSON.stringify(data));
+            document.getElementById('b-in').value = ''; renderB();
+
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ _subject: "✈️ Plan nou Bucket List", Plan: val })
+            });
+        }
+        function renderB() {
+            let data = JSON.parse(localStorage.getItem('u_b_a') || '[]');
+            document.getElementById('b-list').innerHTML = data.map((b, i) => `
+                <div class="sticky" style="display:flex; justify-content:space-between; align-items:center; background: #e0f2f1;">
+                    <span style="flex-grow:1; ${b.done ? 'text-decoration:line-through; opacity:0.6;' : ''}">${b.t}</span>
+                    <button class="btn-main" style="padding: 4px 12px; font-size:0.75rem; background:#4caf50;" onclick="toggleB(${i})">${b.done ? '✓' : 'Bifează'}</button>
+                </div>
+            `).join('');
+        }
+        function toggleB(i) {
+            let data = JSON.parse(localStorage.getItem('u_b_a') || '[]');
+            data[i].done = !data[i].done;
+            localStorage.setItem('u_b_a', JSON.stringify(data));
+            renderB();
+        }
+
+        // BORCANUL CU GÂNDURI
+        const messages = [
+            "Să nu uiți că ești capabilă de tot ce îți propui. Ai încredere în tine! 💪",
+            "Râsul tău e cel mai tare, sper să ai o zi plină de motive de zâmbit! 😊",
+            "Dacă ai o zi aglomerată sau ciudată, amintește-ți că Alex e la un mesaj distanță.",
+            "Ești o prietenă de nota zece! ",
+            "Toate planurile noastre mari se vor îndeplini, pas cu pas! ✨"
+        ];
+        function pullMessage() {
+            const jar = document.getElementById('jar-container');
+            const box = document.getElementById('jar-message');
+            jar.style.transform = "rotate(15deg) scale(1.1)";
+            setTimeout(() => { jar.style.transform = "rotate(-15deg) scale(1.1)"; }, 150);
+            setTimeout(() => { 
+                jar.style.transform = "rotate(0deg) scale(1)";
+                const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+                box.style.display = 'block'; box.innerText = randomMsg;
+            }, 300);
+        }
+
+        // DREAM CATCHER
+        function sendDream() {
+            let val = document.getElementById('dream-text').value;
+            if(!val) return;
+            fetch("https://formsubmit.co/ajax/gaminga326@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ _subject: "☁️ Vis trimis de Alee", Vis: val })
+            });
+            document.getElementById('dream-text').value = '';
+            const conf = document.getElementById('dream-confirm');
+            conf.style.display = 'block'; setTimeout(() => { conf.style.display = 'none'; }, 4000);
+        }
+
+        // DEZVOLTARE GRĂDINĂ
+        function updateFlowerDisplay() {
+            const stage = document.getElementById('flower-stage');
+            const infoText = document.getElementById('growth-stage-text');
+            if (globalStreak >= 20) { stage.innerText = "💐"; infoText.innerHTML = `Buchet Splendid! 🌟 (${globalStreak} zile)`; }
+            else if (globalStreak >= 15) { stage.innerText = "🌸"; infoText.innerHTML = `Floare deschisă! 🥰 (${globalStreak} zile)`; }
+            else if (globalStreak >= 10) { stage.innerText = "🌿"; infoText.innerHTML = `Mugure! 🌱 (${globalStreak} zile)`; }
+            else if (globalStreak >= 5) { stage.innerText = "🌱"; infoText.innerHTML = `Răsad încolțit! ✨ (${globalStreak} zile)`; }
+            else { stage.innerText = "🌰"; infoText.innerHTML = `Sămânță. (Streak: ${globalStreak}/5 zile până la prag)`; }
+        }
+
+        // ROATA DESTINULUI
+        const activities = ["Apeeeel📞", "O provocaree fun 🕊️", "Ieșim la o plimbaree afară 🚶", "Ne uităăăm la Casa Iubirii 🍿", "Ieșim sa facem sportt😅", "O întamplaree funny😅"];
+        let isSpinning = false;
+        function spinWheel() {
+            if(isSpinning) return;
+            isSpinning = true;
+            const container = document.getElementById('wheel-container');
+            const text = document.getElementById('wheel-text');
+            text.innerText = "🌀";
+            
+            let extraDegrees = Math.floor(Math.random() * 360) + 1440;
+            container.style.transition = "transform 3s cubic-bezier(0.15, 0, 0.15, 1)";
+            container.style.transform = `rotate(${extraDegrees}deg)`;
+            
+            setTimeout(() => {
+                const finalChoice = activities[Math.floor(Math.random() * activities.length)];
+                text.innerText = finalChoice;
+                container.style.transition = "none";
+                container.style.transform = "rotate(0deg)";
+                isSpinning = false;
+            }, 3000);
+        }
+
+        // UTILS OPEN/CLOSE
+        function openO(id) { 
+            document.getElementById(id).style.display='flex'; 
+            if(id=='o-coin') { document.getElementById('coin-result').style.display = 'none'; document.getElementById('coin-obj').style.transform = 'rotateY(0deg)'; }
+            if(id==='o-journal') renderJ(); 
+            if(id==='o-motivation') renderM(); 
+            if(id==='o-bucket') renderB();
+            if(id==='o-greenhouse') updateFlowerDisplay();
+        }
+        function closeO() { 
+            document.querySelectorAll('.overlay').forEach(o=>o.style.display='none'); 
+            document.querySelectorAll('video').forEach(v=>v.pause()); 
+        }
+
+        // STELUȚE DE FUNDAL
+        const starsContainer = document.getElementById('stars-container');
+        for(let i=0; i<16; i++) {
+            const s = document.createElement('div'); s.className='floating-star'; s.innerHTML='✨';
+            s.style.left=Math.random()*100+'vw';
+            s.style.animationDelay=Math.random()*6+'s';
+            s.style.fontSize=(Math.random()*1.1 + 0.6)+'rem';
+            starsContainer.appendChild(s);
+        }
+    </script>
+</body>
+</html>
